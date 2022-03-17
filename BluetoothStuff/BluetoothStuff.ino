@@ -70,9 +70,13 @@ void loop() {
 
 
       
-       LightQueryResponse = String(as7341.getChannel(AS7341_CHANNEL_630nm_F7)) + "," + String(as7341.getChannel(AS7341_CHANNEL_515nm_F4)) + "," +String(as7341.getChannel(AS7341_CHANNEL_415nm_F1));
-       Bluetooth.print("#00FF00");
-//       Bluetooth.print(LightQueryResponse);
+       LightQueryResponse = String();
+       int32_t  R = int32_t(convertToRgb(as7341.getChannel(AS7341_CHANNEL_630nm_F7)));
+       int32_t  G = int32_t(convertToRgb(as7341.getChannel(AS7341_CHANNEL_515nm_F4)));
+       int32_t  B = int32_t(convertToRgb(as7341.getChannel(AS7341_CHANNEL_415nm_F1)));
+       
+       LightQueryResponse = RgbToHex(byte(R), byte(G), byte(B));
+Bluetooth.print(LightQueryResponse);
     }
     else if(sData == "c")
     {
@@ -151,4 +155,16 @@ void fetchLight(){
   Serial.print("Near IR  : ");
   Serial.println(as7341.getChannel(AS7341_CHANNEL_NIR));
   return;
+}
+
+String RgbToHex(byte R, byte G, byte B)
+{
+  char hex[7] = {0};
+  sprintf(hex,"%02X%02X%02X",R,G,B); //convert to an hexadecimal string. Lookup sprintf for what %02X means.
+  return "#"+String(hex);
+}
+
+int convertToRgb(uint16_t x){
+  Serial.println("Out: "+String(map(x, 0, 65535, 0, 255))+"in:"+String(x));
+  return map(x, 0, 65535, 0, 255);
 }
