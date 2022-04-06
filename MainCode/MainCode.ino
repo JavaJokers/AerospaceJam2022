@@ -58,7 +58,7 @@ void setup() {
   as7341.setATIME(100);
   as7341.setASTEP(999);
   as7341.setGain(AS7341_GAIN_256X);
-  as7341.setLEDCurrent(85);
+  as7341.setLEDCurrent(30);
   as7341.enableLED(false);
   Serial.println("Initialized all sensors, waiting for connections...");
   Bluetooth.listen();
@@ -121,10 +121,10 @@ void loop() {
     } else if (sData == "r") {
       fetchLight();
 
-      Bluetooth.print(" F1:" + String(as7341.getChannel(AS7341_CHANNEL_415nm_F1)) + " \n\rF2:" + String(as7341.getChannel(AS7341_CHANNEL_445nm_F2)) + " \n\rF3:" + String(as7341.getChannel(AS7341_CHANNEL_480nm_F3)) + " \n\rF4:" + String(as7341.getChannel(AS7341_CHANNEL_515nm_F4)) + " \n\rF5:" + String(as7341.getChannel(AS7341_CHANNEL_555nm_F5)) + " \n\rF6:" + String(as7341.getChannel(AS7341_CHANNEL_590nm_F6)) + " \n\rF7:" + String(as7341.getChannel(AS7341_CHANNEL_630nm_F7)) + " \n\rF8:" + String(as7341.getChannel(AS7341_CHANNEL_680nm_F8)));
+      Bluetooth.print(" F1 (415nm, purple):" + String(as7341.getChannel(AS7341_CHANNEL_415nm_F1)) + " \n\rF2 (445nm, navy blue):" + String(as7341.getChannel(AS7341_CHANNEL_445nm_F2)) + " \n\rF3 (480nm, baby blue):" + String(as7341.getChannel(AS7341_CHANNEL_480nm_F3)) + " \n\rF4 (515nm, green):" + String(as7341.getChannel(AS7341_CHANNEL_515nm_F4)) + " \n\rF5 (555nm, yellow):" + String(as7341.getChannel(AS7341_CHANNEL_555nm_F5)) + " \n\rF6 (590nm, orange):" + String(as7341.getChannel(AS7341_CHANNEL_590nm_F6)) + " \n\rF7 (630nm, orangeish red):" + String(as7341.getChannel(AS7341_CHANNEL_630nm_F7)) + " \n\rF8 (680nm, red):" + String(as7341.getChannel(AS7341_CHANNEL_680nm_F8)));
     } else if (sData == "m") {
 
-      // Completely Dry - 627 to 651
+      // Completely Dry - 627 to 752
       // Barely touching - 456
       // Halfway submerged - 279 - 292
       // Completely Wet - 239 to 243
@@ -143,7 +143,7 @@ void loop() {
        else if(moistureValue>279&&moistureValue<292){
        onOff = "Halfway Submerged";
        }
-       String response = "Moisture: " + onOff + "\r\n  Raw value: " + String(moistureValue);
+       String response = "Moisture: " + onOff + "\r\n  Raw value: " + String(moistureValue) + "\r\n  Percentage: " + String(map(moistureValue, 740, 320, 0, 100)) + "%";
        Bluetooth.print(response);
     }
     else if (sData == "o") {
